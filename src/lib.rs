@@ -34,6 +34,8 @@ pub enum Request {
         /// Request to join the mesh as a GUI client.
         is_client: bool,
     },
+    /// Set the percentual brightness of the controller LEDs between 0.0 and 1.0.
+    SetBrightness(f32),
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
