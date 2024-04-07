@@ -51,3 +51,14 @@ impl FrameHeader {
         }
     }
 }
+
+impl Into<Vec<u8>> for FrameHeader {
+    fn into(self) -> Vec<u8> {
+        let mut bytes = Vec::new();
+
+        bytes.push(self.timestamp.len() as u8);
+        bytes.extend_from_slice(&self.timestamp.as_bytes());
+
+        bytes
+    }
+}
