@@ -1,58 +1,31 @@
-use serde::{Serialize, Deserialize};
-use chrono::DateTime;
+//! A message protocol to enable communication between LEDswarm nodes.
+//! 
+//! This protocol implements controller-controller communication over UWB as well as WebSocket interactions over HTTP to connected GUI clients. Two separate encodings
+//! are used for the two different communication channels. The UWB protocol uses a binary encoding, while the WebSocket protocol uses JSON.
 
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+pub mod client;
+pub mod packet;
+pub mod frame;
+
+pub use self::packet::{UwbPacket, UwbMessage, GameMode};
+pub use self::frame::{
+    Frame,
+    FrameError,
+    FrameHeader,
+    FramePayload,
+    ClientMessage,
+    ControllerMessage,
+    InternalMessage,
+    ProtocolMessage,
+};
+/* 
+#[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
+pub enum InternalMessage {
+    Packet(UwbPacket),
+    Frame(Frame),
+    /// The current average change of acceleration (jolt) experienced by the controller enclosure, as a vector sum.
+    AccelerometerDelta(f32),
+    /// A raw accelerometer reading.
+    AccelerometerRaw { x: f32, y: f32, z: f32 },
 }
-
-pub struct Packet {
-    pub timestamp: DateTime<chrono::Utc>,
-    pub message: Message,
-}
-
-#[derive(Serialize, Deserialize, PartialEq, Debug)]
-/// The possible interactions with client devices or other game controllers.
-pub enum Message {
-    Request(Request),
-    Response(Response),
-    Notice(Notice),
-}
-
-#[derive(Serialize, Deserialize, PartialEq, Debug)]
-pub enum Response {
-    /// Sent by the master node to a client or controller to indicate that 
-    /// the connection was successful.
-    Connected {
-        id: u16,
-    },
-}
-
-#[derive(Serialize, Deserialize, PartialEq, Debug)]
-pub enum Request {
-    /// Initiate a WebSocket session with the master node.
-    Hello {
-        /// Request to join the mesh as a GUI client.
-        is_client: bool,
-    },
-    /// Set the percentual brightness of the controller LEDs between 0.0 and 1.0.
-    SetBrightness(f32),
-}
-
-#[derive(Serialize, Deserialize, PartialEq, Debug)]
-pub enum Notice {
-    /// Terminate the socket session.
-    Farewell,
-    /// Synchronize controller time.
-    Tick(u16),
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+*/
