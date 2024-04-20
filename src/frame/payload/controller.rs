@@ -4,7 +4,6 @@ use serde_derive::{Serialize, Deserialize};
 pub enum ControllerMessage {
     JoinRequest,
     JoinResponse {
-        /// 
         assigned_id: u16,
     },
 }

@@ -59,7 +59,21 @@ impl Frame {
             .message(ControllerMessage::JoinRequest)
             .require_confirmation()
             .target_id(0)
-            .tick(tick)
+            .current_tick(tick)
+    }
+
+    pub fn join_response(tick: u16, assigned_id: u16) -> Self {
+        Self::new()
+            .message(ControllerMessage::JoinResponse { assigned_id })
+            .require_confirmation()
+            .target_id(assigned_id)
+            .current_tick(tick)
+    }
+
+    pub fn tick(tick: u16) -> Self {
+        Self::new()
+            .protocol_message(ProtocolMessage::Tick(tick))
+            .current_tick(tick)
     }
 
     /// Set a game-level command as the message payload of the frame.
@@ -71,11 +85,6 @@ impl Frame {
     /// Set an internal network command as the message payload of the frame.
     pub fn protocol_message(mut self, protocol_msg: ProtocolMessage) -> Self {
         self.payload = FramePayload::ProtocolMessage(protocol_msg);
-        self
-    }
-
-    pub fn internal_message(mut self, msg: InternalMessage) -> Self {
-        self.payload = FramePayload::InternalMessage(msg);
         self
     }
 
@@ -99,7 +108,7 @@ impl Frame {
         self
     }
 
-    pub fn tick(mut self, current_tick: u16) -> Self {
+    pub fn current_tick(mut self, current_tick: u16) -> Self {
         self.header.current_tick = current_tick;
         self
     }
